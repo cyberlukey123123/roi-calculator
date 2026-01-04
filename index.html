@@ -274,15 +274,21 @@
             gap: 20px;
         }
 
-        /* Metrics */
+        /* Metrics - 2 column layout */
         .metrics {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1.5fr;
             gap: 14px;
         }
 
         @media (max-width: 600px) {
-            .metrics { grid-template-columns: 1fr 1fr; }
+            .metrics { grid-template-columns: 1fr; }
+        }
+
+        .metrics-left {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
         .metric {
@@ -293,15 +299,14 @@
         }
 
         .metric.main {
-            grid-column: span 3;
             background: #2d2d2d;
             border: none;
-            padding: 26px;
+            padding: 32px;
             border-radius: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .metric.main { grid-column: span 2; }
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
 
         .metric-label {
@@ -493,7 +498,7 @@
 
     <div class="hero">
         <h1>Risk & ROI Calculator</h1>
-        <p>Quantify your data breach risk and build the business case for Microsoft Purview.</p>
+        <p>Quantify your breach exposure and see the business case for Microsoft Purview.</p>
     </div>
 
     <main class="main">
@@ -550,25 +555,27 @@
             <div class="results">
 
                 <div class="metrics">
+                    <div class="metrics-left">
+                        <div class="metric">
+                            <div class="metric-label">Breach Cost</div>
+                            <div class="metric-value" id="breachCost">£630,000</div>
+                            <div class="metric-sub">Significant incident</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Probability</div>
+                            <div class="metric-value" id="prob">32.0%</div>
+                            <div class="metric-sub">Annual</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Pricing Tier</div>
+                            <div class="metric-value"><span class="tier-pill" id="tier">C</span></div>
+                            <div class="metric-sub" id="tierNote">EAL ≥ £200K</div>
+                        </div>
+                    </div>
                     <div class="metric main">
                         <div class="metric-label">Expected Annual Loss</div>
                         <div class="metric-value" id="eal">£201,600</div>
                         <div class="metric-sub">Your risk-adjusted annual exposure</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">Breach Cost</div>
-                        <div class="metric-value" id="breachCost">£630,000</div>
-                        <div class="metric-sub">Significant incident</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">Probability</div>
-                        <div class="metric-value" id="prob">32.0%</div>
-                        <div class="metric-sub">Annual</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">Pricing Tier</div>
-                        <div class="metric-value"><span class="tier-pill" id="tier">C</span></div>
-                        <div class="metric-sub" id="tierNote">EAL ≥ £200K</div>
                     </div>
                 </div>
 
