@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk & ROI Calculator | QuantiveCyber</title>
+    
+    <!-- Outfit - closest free match to Codec Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --ink: #1a1a1a;
+            --ink-mid: #555555;
+            --ink-light: #888888;
+            --bg: #f7f8f9;
+            --white: #ffffff;
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+            --green: #10b981;
+            --red: #ef4444;
+            --border: #e2e4e8;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 0;
+        }
+
+        .header-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo-img {
+            height: 54px;
+        }
+
+        .brand-info {
+            padding-left: 18px;
+            border-left: 2px solid var(--border);
+        }
+
+        .brand-name {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.3px;
+        }
+
+        .brand-tagline {
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--ink-light);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--white);
+            padding: 44px 24px 52px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            color: var(--ink-mid);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 36px 24px 60px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        @media (max-width: 840px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== LEFT PANEL ===== */
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+        }
+
+        .panel-title {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--ink-light);
+            margin-bottom: 22px;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        .field:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .field select,
+        .field input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--white);
+            color: var(--ink);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field select:focus,
+        .field input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        /* Score */
+        .score-box {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .score-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .score-num {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .score-num span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--ink-light);
+        }
+
+        .risk-tag {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+
+        .risk-tag.critical { background: #fef2f2; color: var(--red); }
+        .risk-tag.elevated { background: #fffbeb; color: #f59e0b; }
+        .risk-tag.managed { background: #ecfdf5; color: var(--green); }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border);
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Method */
+        .method {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .method summary {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .method summary::-webkit-details-marker { display: none; }
+
+        .method-body {
+            margin-top: 14px;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--ink-mid);
+            line-height: 1.7;
+        }
+
+        .method-body p { margin-bottom: 8px; }
+
+        .method-body code {
+            font-family: 'Outfit', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--white);
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* ===== RIGHT ===== */
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .metrics { grid-template-columns: 1fr 1fr; }
+        }
+
+        .metric {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .metric.main {
+            grid-column: span 3;
+            background: #2d2d2d;
+            border: none;
+            padding: 26px;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .metric.main { grid-column: span 2; }
+        }
+
+        .metric-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-light);
+            margin-bottom: 8px;
+        }
+
+        .metric.main .metric-label {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .metric-value {
+            font-size: 1.625rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.5px;
+        }
+
+        .metric.main .metric-value {
+            font-size: 2.5rem;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--ink-light);
+            margin-top: 4px;
+        }
+
+        .metric.main .metric-sub {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .tier-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-radius: 12px;
+        }
+
+        /* Packages */
+        .pkg-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .pkg-header {
+            padding: 16px 20px;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pkg-row {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr 0.8fr 0.8fr;
+            padding: 14px 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .pkg-row:last-child { border-bottom: none; }
+
+        .pkg-row.head {
+            background: var(--bg);
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-light);
+            padding: 10px 20px;
+        }
+
+        .pkg-name {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .pkg-name small {
+            display: block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--green);
+            margin-top: 2px;
+        }
+
+        .pkg-row .green {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px 26px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-main {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-main:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-ghost {
+            background: var(--white);
+            border: 1px solid var(--border);
+            color: var(--ink);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 22px 0;
+            margin-top: 36px;
+        }
+
+        .footer-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--ink-light);
+        }
+
+        .footer a {
+            color: var(--ink-mid);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .footer a:hover { color: var(--accent); }
+
+        @media print {
+            .header, .footer, .btns, .method { display: none; }
+            .hero { padding: 20px; }
+            .grid { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <img src="logo.png" alt="QuantiveCyber" class="logo-img">
+            <div class="brand-info">
+                <div class="brand-name">QuantiveCyber</div>
+                <div class="brand-tagline">Security you can measure</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Risk & ROI Calculator</h1>
+        <p>Quantify your breach exposure and see the business case for Microsoft Purview.</p>
+    </div>
+
+    <main class="main">
+        <div class="grid">
+
+            <div class="panel">
+                <div class="panel-title">Organisation Profile</div>
+
+                <div class="field">
+                    <label for="industry">Industry</label>
+                    <select id="industry">
+                        <option value="general">General Business</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="professional services" selected>Professional Services</option>
+                        <option value="legal">Legal Services</option>
+                        <option value="financial">Financial Services</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="public">Public Sector</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="employees">Number of Employees</label>
+                    <input type="number" id="employees" value="350" min="10" max="5000" step="10">
+                </div>
+
+                <div class="field">
+                    <label for="revenue">Annual Revenue (£M)</label>
+                    <input type="number" id="revenue" value="10" min="0.5" max="500" step="0.5">
+                </div>
+
+                <div class="field">
+                    <label>Security Maturity Score</label>
+                    <div class="score-box">
+                        <div class="score-top">
+                            <div class="score-num" id="scoreNum">28<span> / 100</span></div>
+                            <div class="risk-tag critical" id="riskTag">Critical</div>
+                        </div>
+                        <input type="range" class="slider" id="score" value="28" min="0" max="100">
+                    </div>
+                </div>
+
+                <details class="method">
+                    <summary>How we calculate this ↓</summary>
+                    <div class="method-body">
+                        <p>Based on <strong>IBM/Ponemon 2024</strong> and <strong>UK Gov Cyber Breaches Survey 2025</strong>.</p>
+                        <p><code>Breach Cost = Base × Revenue × Industry</code></p>
+                        <p><code>EAL = Cost × Probability</code></p>
+                        <p>Probability: 40% at score 0 → 5.5% at score 100.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="results">
+
+                <div class="metrics">
+                    <div class="metric main">
+                        <div class="metric-label">Expected Annual Loss</div>
+                        <div class="metric-value" id="eal">£201,600</div>
+                        <div class="metric-sub">Your risk-adjusted annual exposure</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Breach Cost</div>
+                        <div class="metric-value" id="breachCost">£630,000</div>
+                        <div class="metric-sub">Significant incident</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Probability</div>
+                        <div class="metric-value" id="prob">32.0%</div>
+                        <div class="metric-sub">Annual</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Pricing Tier</div>
+                        <div class="metric-value"><span class="tier-pill" id="tier">C</span></div>
+                        <div class="metric-sub" id="tierNote">EAL ≥ £200K</div>
+                    </div>
+                </div>
+
+                <div class="pkg-card">
+                    <div class="pkg-header">Implementation Packages</div>
+                    <div class="pkg-row head">
+                        <div>Package</div>
+                        <div>Investment</div>
+                        <div>Savings / yr</div>
+                        <div>3yr ROI</div>
+                        <div>Payback</div>
+                    </div>
+                    <div id="pkgRows"></div>
+                </div>
+
+                <div class="btns">
+                    <button class="btn btn-main" onclick="location.href='mailto:hello@quantivecyber.com?subject=Assessment Request'">Schedule Assessment</button>
+                    <button class="btn btn-ghost" onclick="window.print()">Print Report</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>© 2025 QuantiveCyber. For planning purposes only.</span>
+            <div>
+                <a href="https://quantivecyber.com">Website</a>
+                <a href="mailto:hello@quantivecyber.com">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const CFG = {
+            m: { 'general': 1.0, 'manufacturing': 1.0, 'professional services': 1.2, 'legal': 1.3, 'financial': 1.4, 'healthcare': 1.5, 'public': 1.1 },
+            p: {
+                A: { foundation: [8000, 18.5], strategic: [15000, 24], advanced: [15000, 17.5], bundle: [35000, 60] },
+                B: { foundation: [12000, 18.5], strategic: [20000, 24], advanced: [20000, 17.5], bundle: [48000, 60] },
+                C: { foundation: [15000, 18.5], strategic: [25000, 24], advanced: [25000, 17.5], bundle: [60000, 60] }
+            }
+        };
+
+        const fmt = v => '£' + Math.round(v).toLocaleString('en-GB');
+        const prob = s => s <= 70 ? 0.40 - (0.20 * s / 70) : 0.20 - (0.145 * (s - 70) / 30);
+        const tier = e => e < 100000 ? 'A' : e < 200000 ? 'B' : 'C';
+
+        function calc() {
+            const ind = document.getElementById('industry').value;
+            const emp = parseInt(document.getElementById('employees').value) || 350;
+            const rev = (parseFloat(document.getElementById('revenue').value) || 10) * 1e6;
+            const sc = parseInt(document.getElementById('score').value) || 28;
+
+            document.getElementById('scoreNum').innerHTML = sc + '<span> / 100</span>';
+
+            const tag = document.getElementById('riskTag');
+            if (sc < 35) { tag.textContent = 'Critical'; tag.className = 'risk-tag critical'; }
+            else if (sc < 70) { tag.textContent = 'Elevated'; tag.className = 'risk-tag elevated'; }
+            else { tag.textContent = 'Managed'; tag.className = 'risk-tag managed'; }
+
+            const base = Math.max(50000, Math.min(2000000, emp * 1500));
+            const cost = base * Math.min(1.5, rev / 1e7) * (CFG.m[ind] || 1);
+            const p = prob(sc);
+            const eal = cost * p;
+            const t = tier(eal);
+
+            document.getElementById('eal').textContent = fmt(eal);
+            document.getElementById('breachCost').textContent = fmt(cost);
+            document.getElementById('prob').textContent = (p * 100).toFixed(1) + '%';
+            document.getElementById('tier').textContent = t;
+            document.getElementById('tierNote').textContent = t === 'A' ? 'EAL < £100K' : t === 'B' ? '£100K–£200K' : 'EAL ≥ £200K';
+
+            const pkgs = CFG.p[t];
+            const rec = sc < 35 ? 'foundation' : sc < 60 ? 'strategic' : 'advanced';
+            let html = '';
+            ['foundation', 'strategic', 'advanced', 'bundle'].forEach(k => {
+                const [price, inc] = pkgs[k];
+                const sav = eal - cost * prob(Math.min(100, sc + inc));
+                const roi = ((sav * 3 - price) / price * 100);
+                const pb = (price / sav) * 52;
+                const nm = k === 'bundle' ? 'Full Bundle' : k.charAt(0).toUpperCase() + k.slice(1);
+                html += `<div class="pkg-row">
+                    <div class="pkg-name">${nm}${k === rec ? '<small>Recommended</small>' : ''}</div>
+                    <div>${fmt(price)}</div>
+                    <div class="green">${fmt(sav)}</div>
+                    <div class="green">${Math.round(roi)}%</div>
+                    <div>${pb.toFixed(0)}w</div>
+                </div>`;
+            });
+            document.getElementById('pkgRows').innerHTML = html;
+        }
+
+        ['industry', 'employees', 'revenue', 'score'].forEach(id => {
+            document.getElementById(id).addEventListener(id === 'industry' ? 'change' : 'input', calc);
+        });
+        calc();
+    </script>
+</body>
+</html>
