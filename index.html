@@ -704,7 +704,6 @@
             document.getElementById('tierNote').textContent = t === 'A' ? 'EAL < £100K' : t === 'B' ? '£100K–£200K' : 'EAL ≥ £200K';
 
             const pkgs = CFG.p[t];
-            const rec = sc < 35 ? 'foundation' : sc < 60 ? 'strategic' : 'advanced';
             let html = '';
             ['foundation', 'strategic', 'advanced', 'bundle'].forEach(k => {
                 const [price, inc] = pkgs[k];
@@ -714,8 +713,9 @@
                 const pb = (price / sav) * 52;
                 const pbDisplay = !isFinite(pb) || pb <= 0 ? '-' : pb.toFixed(0) + 'w';
                 const nm = k === 'bundle' ? 'Full Bundle' : k.charAt(0).toUpperCase() + k.slice(1);
+                const isRecommended = k === 'bundle';
                 html += `<div class="pkg-row">
-                    <div class="pkg-name">${nm}${k === rec ? '<small>Recommended</small>' : ''}</div>
+                    <div class="pkg-name">${nm}${isRecommended ? '<small>Recommended</small>' : ''}</div>
                     <div data-label="Investment">${fmt(price)}</div>
                     <div data-label="Savings / yr" class="green">${fmt(sav)}</div>
                     <div data-label="Payback">${pbDisplay}</div>
