@@ -646,6 +646,7 @@
 
                 <div class="btns">
                     <button class="btn btn-main" onclick="location.href='mailto:hello@quantivecyber.com?subject=Assessment Request'">Schedule Assessment</button>
+                    <button class="btn btn-ghost" onclick="shareResults()">Share Results</button>
                     <button class="btn btn-ghost" onclick="window.print()">Print Report</button>
                 </div>
 
@@ -727,6 +728,44 @@
         ['industry', 'employees', 'revenue', 'score'].forEach(id => {
             document.getElementById(id).addEventListener(id === 'industry' ? 'change' : 'input', calc);
         });
+
+        // Share results function
+        function shareResults() {
+            const params = new URLSearchParams({
+                industry: document.getElementById('industry').value,
+                employees: document.getElementById('employees').value,
+                revenue: document.getElementById('revenue').value,
+                score: document.getElementById('score').value
+            });
+            const url = window.location.origin + window.location.pathname + '?' + params.toString();
+
+            // Try to copy to clipboard
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Shareable link copied to clipboard!');
+            }).catch(() => {
+                // Fallback if clipboard fails
+                prompt('Copy this link to share your results:', url);
+            });
+        }
+
+        // Load parameters from URL on page load
+        function loadFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('industry')) {
+                document.getElementById('industry').value = params.get('industry');
+            }
+            if (params.has('employees')) {
+                document.getElementById('employees').value = params.get('employees');
+            }
+            if (params.has('revenue')) {
+                document.getElementById('revenue').value = params.get('revenue');
+            }
+            if (params.has('score')) {
+                document.getElementById('score').value = params.get('score');
+            }
+        }
+
+        loadFromURL();
         calc();
     </script>
 </body>
