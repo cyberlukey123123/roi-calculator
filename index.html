@@ -741,7 +741,7 @@
 
             // Try to copy to clipboard
             navigator.clipboard.writeText(url).then(() => {
-                alert('Shareable link copied to clipboard!');
+                alert('Link copied! Anyone with this link can view your calculator results.');
             }).catch(() => {
                 // Fallback if clipboard fails
                 prompt('Copy this link to share your results:', url);
