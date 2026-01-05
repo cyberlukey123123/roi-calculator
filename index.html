@@ -414,6 +414,47 @@
             font-weight: 700;
         }
 
+        /* Mobile card layout for packages */
+        @media (max-width: 768px) {
+            .pkg-row.head {
+                display: none;
+            }
+
+            .pkg-row {
+                display: block;
+                padding: 20px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pkg-row > div {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+            }
+
+            .pkg-row > div:first-child {
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+                border-bottom: 1px solid var(--border);
+                display: block;
+            }
+
+            .pkg-row > div:not(:first-child)::before {
+                content: attr(data-label);
+                font-size: 0.6875rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--ink-light);
+            }
+
+            .pkg-name {
+                font-size: 1rem;
+                margin-bottom: 4px;
+            }
+        }
+
         /* Buttons */
         .btns {
             display: flex;
@@ -661,10 +702,10 @@
                 const nm = k === 'bundle' ? 'Full Bundle' : k.charAt(0).toUpperCase() + k.slice(1);
                 html += `<div class="pkg-row">
                     <div class="pkg-name">${nm}${k === rec ? '<small>Recommended</small>' : ''}</div>
-                    <div>${fmt(price)}</div>
-                    <div class="green">${fmt(sav)}</div>
-                    <div>${pb.toFixed(0)}w</div>
-                    <div class="green">${(newProb * 100).toFixed(1)}%</div>
+                    <div data-label="Investment">${fmt(price)}</div>
+                    <div data-label="Savings / yr" class="green">${fmt(sav)}</div>
+                    <div data-label="Payback">${pb.toFixed(0)}w</div>
+                    <div data-label="New Probability" class="green">${(newProb * 100).toFixed(1)}%</div>
                 </div>`;
             });
             document.getElementById('pkgRows').innerHTML = html;
