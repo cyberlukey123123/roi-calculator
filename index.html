@@ -585,8 +585,8 @@
                         <div>Package</div>
                         <div>Investment</div>
                         <div>Savings / yr</div>
-                        <div>3yr ROI</div>
                         <div>Payback</div>
+                        <div>New Risk</div>
                     </div>
                     <div id="pkgRows"></div>
                 </div>
@@ -654,16 +654,17 @@
             let html = '';
             ['foundation', 'strategic', 'advanced', 'bundle'].forEach(k => {
                 const [price, inc] = pkgs[k];
-                const sav = eal - cost * prob(Math.min(100, sc + inc));
-                const roi = ((sav * 3 - price) / price * 100);
+                const newScore = Math.min(100, sc + inc);
+                const newProb = prob(newScore);
+                const sav = eal - cost * newProb;
                 const pb = (price / sav) * 52;
                 const nm = k === 'bundle' ? 'Full Bundle' : k.charAt(0).toUpperCase() + k.slice(1);
                 html += `<div class="pkg-row">
                     <div class="pkg-name">${nm}${k === rec ? '<small>Recommended</small>' : ''}</div>
                     <div>${fmt(price)}</div>
                     <div class="green">${fmt(sav)}</div>
-                    <div class="green">${Math.round(roi)}%</div>
                     <div>${pb.toFixed(0)}w</div>
+                    <div class="green">${(newProb * 100).toFixed(1)}%</div>
                 </div>`;
             });
             document.getElementById('pkgRows').innerHTML = html;
