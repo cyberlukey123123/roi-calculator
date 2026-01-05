@@ -699,12 +699,13 @@
                 const newProb = prob(newScore);
                 const sav = eal - cost * newProb;
                 const pb = (price / sav) * 52;
+                const pbDisplay = !isFinite(pb) || pb <= 0 ? '-' : pb.toFixed(0) + 'w';
                 const nm = k === 'bundle' ? 'Full Bundle' : k.charAt(0).toUpperCase() + k.slice(1);
                 html += `<div class="pkg-row">
                     <div class="pkg-name">${nm}${k === rec ? '<small>Recommended</small>' : ''}</div>
                     <div data-label="Investment">${fmt(price)}</div>
                     <div data-label="Savings / yr" class="green">${fmt(sav)}</div>
-                    <div data-label="Payback">${pb.toFixed(0)}w</div>
+                    <div data-label="Payback">${pbDisplay}</div>
                     <div data-label="New Probability" class="green">${(newProb * 100).toFixed(1)}%</div>
                 </div>`;
             });
