@@ -534,10 +534,10 @@
                     <label>Security Maturity Score</label>
                     <div class="score-box">
                         <div class="score-top">
-                            <div class="score-num" id="scoreNum">28<span> / 100</span></div>
+                            <div class="score-num" id="scoreNum">0<span> / 100</span></div>
                             <div class="risk-tag critical" id="riskTag">Critical</div>
                         </div>
-                        <input type="range" class="slider" id="score" value="28" min="0" max="100">
+                        <input type="range" class="slider" id="score" value="0" min="0" max="100">
                     </div>
                 </div>
 
@@ -628,7 +628,7 @@
             const ind = document.getElementById('industry').value;
             const emp = parseInt(document.getElementById('employees').value) || 350;
             const rev = (parseFloat(document.getElementById('revenue').value) || 10) * 1e6;
-            const sc = parseInt(document.getElementById('score').value) || 28;
+            const sc = parseInt(document.getElementById('score').value) || 0;
 
             document.getElementById('scoreNum').innerHTML = sc + '<span> / 100</span>';
 
